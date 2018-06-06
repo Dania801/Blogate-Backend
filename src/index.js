@@ -1,10 +1,21 @@
+/* eslint-disable no-console*/
+
 import express from 'express';
+import constants from './config/constants';
+import './config/database';
+import middlewaresConfig from './config/middlewares';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+middlewaresConfig(app);
+
+app.get('/', (req, res) => {
+  res.send('Hello world!');
+});
+
+const PORT = constants.PORT;
 app.listen(PORT, err => {
-  if (err){
-    console.log(err)
+  if (err) {
+    throw err;
   } else {
     console.log(`
       Server running on port ${PORT}
@@ -14,4 +25,4 @@ app.listen(PORT, err => {
       Welcome to Blogate Server :)
     `);
   }
-})
+});
