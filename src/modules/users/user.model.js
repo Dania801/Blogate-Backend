@@ -9,7 +9,6 @@ const UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: [true, 'Email is required!'],
     trim: true,
     validate: {
       validator(email) {
@@ -36,7 +35,6 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required!'],
     trim: true,
     minLength: [6, 'Password needs to be longer!'],
     validate: {
@@ -46,6 +44,13 @@ const UserSchema = new Schema({
       message: '{VALUE} is not a valid password!',
     },
   },
+  twitterId: {
+    type: String,
+    trim: true,
+    unique: true,
+  },
+}, {
+  timestamps: true,
 });
 
 UserSchema.pre('save', function (next) {
