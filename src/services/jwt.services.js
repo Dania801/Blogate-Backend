@@ -5,7 +5,7 @@ import User from '../modules/users/user.model';
 import constants from '../config/constants';
 
 const jwtOpts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeader('authorization'),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
   secretOrKey: constants.JWT_SECRET,
 };
 

@@ -43,3 +43,15 @@ export function login(req, res, next) {
   res.status(200).json(req.user.toJSON());
   return next();
 }
+
+export async function update(req, res) {
+  try {
+    const user = await User.findById(req.user._id);
+    Object.keys(req.body).forEach(key => {
+      user[key] = req.body[key];
+    });
+    return res.status(201).json(await user.save());
+  } catch (e) {
+    return res.status(404).json(e);
+  }
+}
