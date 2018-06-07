@@ -1,5 +1,6 @@
 const devConfig = {
   MONGO_URL: 'mongodb://localhost/blogate-dev',
+  JWT_SECRET: 'thisismysecretecode',
 };
 
 const testConfig = {
