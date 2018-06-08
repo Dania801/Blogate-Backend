@@ -11,5 +11,6 @@ routes.post('/', authJwt, validate(articleValidation.createArticle), articleCont
 routes.get('/:id', authJwt, articleController.getArticleById);
 routes.get('/', authJwt, articleController.getArticlesList);
 routes.patch('/:id', authJwt, validate(articleValidation.updateArticle), articleController.updateArticle);
+routes.delete('/:id', authJwt, articleController.deleteArticle);
 
 export default routes;
