@@ -41,6 +41,15 @@ ArticleSchema.methods = {
   _slugify() {
     this.slug = slug(this.title);
   },
+  toJSON() {
+    return {
+      _id: this._id,
+      title: this.title,
+      text: this.text,
+      slug: this.slug,
+      user: this.user,
+    };
+  },
 };
 
 ArticleSchema.statics = {
@@ -49,6 +58,13 @@ ArticleSchema.statics = {
       ...args,
       user,
     });
+  },
+  articlesList({ skip = 0, limit = 5 } = {}) {
+    return this.find()
+      .sort()
+      .skip(skip)
+      .limit(limit)
+      .populate('user');
   },
 };
 

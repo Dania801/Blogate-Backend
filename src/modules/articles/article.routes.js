@@ -8,5 +8,8 @@ import * as articleController from './article.controllers';
 const routes = new Router();
 
 routes.post('/', authJwt, validate(articleValidation.createArticle), articleController.createArticle);
+routes.get('/:id', authJwt, articleController.getArticleById);
+routes.get('/', authJwt, articleController.getArticlesList);
+routes.patch('/:id', authJwt, validate(articleValidation.updateArticle), articleController.updateArticle);
 
 export default routes;

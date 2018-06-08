@@ -1,11 +1,12 @@
+import HTTPStatus from 'http-status';
 import User from './user.model';
 
 export async function signUp(req, res) {
   try {
     const user = await User.create(req.body);
-    return res.status(201).json(user);
+    return res.status(HTTPStatus.CREATED).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    return res.status(HTTPStatus.BAD_REQUEST).json(err);
   }
 }
 
@@ -21,12 +22,12 @@ function upsertUser(profile, res) {
       });
       newUser.save((error, savedUser) => {
         if (error) {
-          return res.status(404);
+          return res.status(HTTPStatus.BAD_REQUEST);
         }
-        return res.status(201).json(savedUser.toJSON());
+        return res.status(HTTPStatus.CREATED).json(savedUser.toJsonAuth());
       });
     } else {
-      return res.status(201).json(user.toJSON());
+      return res.status(HTTPStatus.OK).json(user.toJsonAuth());
     }
   });
 }
@@ -35,12 +36,12 @@ export async function twitterSignup(req, res) {
   try {
     upsertUser(req.user, res);
   } catch (e) {
-    return res.status(404).json(e);
+    return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
 }
 
 export function login(req, res, next) {
-  res.status(200).json(req.user.toJSON());
+  res.status(HTTPStatus.OK).json(req.user.toJsonAuth());
   return next();
 }
 
@@ -50,8 +51,8 @@ export async function update(req, res) {
     Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
-    return res.status(201).json(await user.save());
+    return res.status(HTTPStatus.OK).json(await user.save());
   } catch (e) {
-    return res.status(404).json(e);
+    return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
 }
