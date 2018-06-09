@@ -56,6 +56,13 @@ EventSchema.statics = {
       user,
     });
   },
+  eventsList({ skip = 0, limit = 5 } = {}) {
+    return this.find()
+      .sort()
+      .skip(skip)
+      .limit(limit)
+      .populate('user');
+  },
 };
 
 export default mongoose.model('Event', EventSchema);

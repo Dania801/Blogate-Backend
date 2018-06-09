@@ -25,7 +25,7 @@ export async function getArticlesList(req, res) {
   const limit = parseInt(req.query.limit, 0);
   try {
     const articles = await Article.articlesList({ skip, limit });
-    return res.status(HTTPStatus.OK).json(articles).populate('user');
+    return res.status(HTTPStatus.OK).json(articles);
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
