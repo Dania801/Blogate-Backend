@@ -183,6 +183,54 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n
 
 /***/ }),
 
+/***/ "./src/modules/events/event.controllers.js":
+/*!*************************************************!*\
+  !*** ./src/modules/events/event.controllers.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.createEvent = createEvent;\n\nvar _httpStatus = __webpack_require__(/*! http-status */ \"http-status\");\n\nvar _httpStatus2 = _interopRequireDefault(_httpStatus);\n\nvar _event = __webpack_require__(/*! ./event.model */ \"./src/modules/events/event.model.js\");\n\nvar _event2 = _interopRequireDefault(_event);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nasync function createEvent(req, res) {\n  try {\n    const article = await _event2.default.createEvent(req.body, req.params._id);\n    return res.status(_httpStatus2.default.CREATED).json(article);\n  } catch (e) {\n    return res.status(400).json(e);\n  }\n}\n\n//# sourceURL=webpack:///./src/modules/events/event.controllers.js?");
+
+/***/ }),
+
+/***/ "./src/modules/events/event.model.js":
+/*!*******************************************!*\
+  !*** ./src/modules/events/event.model.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _mongoose = __webpack_require__(/*! mongoose */ \"mongoose\");\n\nvar _mongoose2 = _interopRequireDefault(_mongoose);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nconst EventSchema = new _mongoose.Schema({\n  title: {\n    type: String,\n    required: [true, 'Event title is required!'],\n    trim: true,\n    minlength: [5, 'Event title need to be longer!'],\n    maxlength: [50, 'Event title need to be shorter!']\n  },\n  description: {\n    type: String,\n    trim: true,\n    minlength: [10, 'Event description need to be longer!'],\n    maxlength: [200, 'Event description need to be shorter!']\n  },\n  startDate: {\n    type: Date,\n    required: [true, 'Begin date is required!'],\n    trim: true\n  },\n  endDate: {\n    type: Date,\n    trim: true\n  },\n  user: {\n    type: _mongoose.Schema.Types.ObjectId,\n    ref: 'User'\n  }\n}, { timestamps: true });\n\nEventSchema.pre('save', function (next) {\n  if (!this.endDate) {\n    this.endDate = this.startDate;\n  }\n  next();\n});\n\nEventSchema.methods = {\n  toJson() {\n    return {\n      _id: this._id,\n      title: this.title,\n      description: this.description,\n      startDate: this.startDate,\n      endDate: this.endDate,\n      user: this.user\n    };\n  }\n};\n\nEventSchema.statics = {\n  createEvent(args, user) {\n    return this.create(Object.assign({}, args, {\n      user\n    }));\n  }\n};\n\nexports.default = _mongoose2.default.model('Event', EventSchema);\n\n//# sourceURL=webpack:///./src/modules/events/event.model.js?");
+
+/***/ }),
+
+/***/ "./src/modules/events/event.routes.js":
+/*!********************************************!*\
+  !*** ./src/modules/events/event.routes.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _express = __webpack_require__(/*! express */ \"express\");\n\nvar _expressValidation = __webpack_require__(/*! express-validation */ \"express-validation\");\n\nvar _expressValidation2 = _interopRequireDefault(_expressValidation);\n\nvar _event = __webpack_require__(/*! ./event.controllers */ \"./src/modules/events/event.controllers.js\");\n\nvar eventController = _interopRequireWildcard(_event);\n\nvar _event2 = __webpack_require__(/*! ./event.validations */ \"./src/modules/events/event.validations.js\");\n\nvar _event3 = _interopRequireDefault(_event2);\n\nvar _jwt = __webpack_require__(/*! ../../services/jwt.services */ \"./src/services/jwt.services.js\");\n\nfunction _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nconst routes = new _express.Router();\n\nroutes.post('/', _jwt.authJwt, (0, _expressValidation2.default)(_event3.default.createEvent), eventController.createEvent);\n\nexports.default = routes;\n\n//# sourceURL=webpack:///./src/modules/events/event.routes.js?");
+
+/***/ }),
+
+/***/ "./src/modules/events/event.validations.js":
+/*!*************************************************!*\
+  !*** ./src/modules/events/event.validations.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _joi = __webpack_require__(/*! joi */ \"joi\");\n\nvar _joi2 = _interopRequireDefault(_joi);\n\nvar _joiDateExtensions = __webpack_require__(/*! joi-date-extensions */ \"joi-date-extensions\");\n\nvar _joiDateExtensions2 = _interopRequireDefault(_joiDateExtensions);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nconst Joi = _joi2.default.extend(_joiDateExtensions2.default);\n\nexports.default = {\n  createEvent: {\n    body: {\n      title: _joi2.default.string().min(5).max(50).required(),\n      description: _joi2.default.string().min(10).max(200),\n      startDate: Joi.date().format('YYYY-MM-DD'),\n      endDate: Joi.date().format('YYYY-MM-DD')\n    }\n  },\n  updateEvent: {\n    body: {\n      title: _joi2.default.string().min(5).max(50),\n      description: _joi2.default.string().min(10).max(200),\n      startDate: Joi.date().format('YYYY-MM-DD'),\n      endDate: Joi.date().format('YYYY-MM-DD')\n    }\n  }\n};\n\n//# sourceURL=webpack:///./src/modules/events/event.validations.js?");
+
+/***/ }),
+
 /***/ "./src/modules/index.js":
 /*!******************************!*\
   !*** ./src/modules/index.js ***!
@@ -191,7 +239,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _user = __webpack_require__(/*! ./users/user.routes */ \"./src/modules/users/user.routes.js\");\n\nvar _user2 = _interopRequireDefault(_user);\n\nvar _article = __webpack_require__(/*! ./articles/article.routes */ \"./src/modules/articles/article.routes.js\");\n\nvar _article2 = _interopRequireDefault(_article);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = app => {\n  app.use('/api/v1/users', _user2.default);\n  app.use('/api/v1/articles', _article2.default);\n};\n\n//# sourceURL=webpack:///./src/modules/index.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _user = __webpack_require__(/*! ./users/user.routes */ \"./src/modules/users/user.routes.js\");\n\nvar _user2 = _interopRequireDefault(_user);\n\nvar _article = __webpack_require__(/*! ./articles/article.routes */ \"./src/modules/articles/article.routes.js\");\n\nvar _article2 = _interopRequireDefault(_article);\n\nvar _event = __webpack_require__(/*! ./events/event.routes */ \"./src/modules/events/event.routes.js\");\n\nvar _event2 = _interopRequireDefault(_event);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = app => {\n  app.use('/api/v1/users', _user2.default);\n  app.use('/api/v1/articles', _article2.default);\n  app.use('/api/v1/events', _event2.default);\n};\n\n//# sourceURL=webpack:///./src/modules/index.js?");
 
 /***/ }),
 
@@ -375,6 +423,17 @@ eval("module.exports = require(\"http-status\");\n\n//# sourceURL=webpack:///ext
 /***/ (function(module, exports) {
 
 eval("module.exports = require(\"joi\");\n\n//# sourceURL=webpack:///external_%22joi%22?");
+
+/***/ }),
+
+/***/ "joi-date-extensions":
+/*!**************************************!*\
+  !*** external "joi-date-extensions" ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"joi-date-extensions\");\n\n//# sourceURL=webpack:///external_%22joi-date-extensions%22?");
 
 /***/ }),
 

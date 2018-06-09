@@ -5,14 +5,14 @@ const EventSchema = new Schema({
     type: String,
     required: [true, 'Event title is required!'],
     trim: true,
-    minLength: [5, 'Event title need to be longer!'],
-    maxLength: [50, 'Event title need to be shorter!'],
+    minlength: [5, 'Event title need to be longer!'],
+    maxlength: [50, 'Event title need to be shorter!'],
   },
   description: {
     type: String,
     trim: true,
-    minLength: [10, 'Event description need to be longer!'],
-    maxLength: [200, 'Event description need to be shorter!'],
+    minlength: [10, 'Event description need to be longer!'],
+    maxlength: [200, 'Event description need to be shorter!'],
   },
   startDate: {
     type: Date,
