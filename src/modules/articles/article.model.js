@@ -33,7 +33,6 @@ ArticleSchema.plugin(uniqueValidator, {
 
 ArticleSchema.pre('validate', function (next) {
   this._slugify();
-
   next();
 });
 
