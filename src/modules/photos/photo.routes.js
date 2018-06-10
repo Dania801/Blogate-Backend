@@ -8,6 +8,8 @@ import { mult } from '../../services/multer.services';
 
 const routes = new Router();
 
-routes.post('/', authJwt, mult, photoController.addPhoto);
+routes.post('/', authJwt, mult, validate(photoValidator.addPhoto), photoController.addPhoto);
+routes.get('/:id', authJwt, photoController.getPhotoById);
+routes.get('/', authJwt, photoController.getPhotosList);
 
 export default routes;
