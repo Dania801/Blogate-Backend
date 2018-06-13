@@ -34,3 +34,35 @@ export async function getPhotosList(req, res) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
 }
+
+export async function updatePhoto(req, res) {
+  try {
+    const photo = await Photo.findById(req.params.id);
+    if (!photo.user.equals(req.user._id)) {
+      return res.sendStatus(HTTPStatus.UNAUTHORIZED);
+    }
+    Object.keys(req.body).forEach(key => {
+      photo[key] = req.body[key];
+    });
+    if (req.file) {
+      photo.photo.contentType = req.file.mimetype;
+      photo.photo.data = req.file.path;
+    }
+    return res.status(HTTPStatus.OK).json(await photo.save());
+  } catch (e) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+  }
+}
+
+export async function deletePhoto(req, res) {
+  try {
+    const photo = await Photo.findById(req.params.id);
+    if (!photo.user.equals(req.user._id)) {
+      return res.sendStatus(HTTPStatus.UNAUTHORIZED);
+    }
+    await photo.remove();
+    return res.sendStatus(HTTPStatus.OK);
+  } catch (e) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+  }
+}

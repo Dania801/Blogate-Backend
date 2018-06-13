@@ -11,5 +11,7 @@ const routes = new Router();
 routes.post('/', authJwt, mult, validate(photoValidator.addPhoto), photoController.addPhoto);
 routes.get('/:id', authJwt, photoController.getPhotoById);
 routes.get('/', authJwt, photoController.getPhotosList);
+routes.patch('/:id', authJwt, mult, photoController.updatePhoto);
+routes.delete('/:id', authJwt, photoController.deletePhoto);
 
 export default routes;
