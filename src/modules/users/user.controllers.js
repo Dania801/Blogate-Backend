@@ -51,6 +51,10 @@ export async function update(req, res) {
     Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
+    if (req.file) {
+      user.photo.contentType = req.file.mimetype;
+      user.photo.data = req.file.path;
+    }
     return res.status(HTTPStatus.OK).json(await user.save());
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);

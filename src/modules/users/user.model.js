@@ -50,6 +50,10 @@ const UserSchema = new Schema({
     trim: true,
     unique: true,
   },
+  photo: {
+    data: Buffer,
+    contentType: String,
+  },
 }, {
   timestamps: true,
 });
@@ -80,6 +84,7 @@ UserSchema.methods = {
       userName: this.userName,
       firstName: this.firstName,
       lastName: this.lastName,
+      photo: this.photo,
     };
   },
   toJsonAuth() {
